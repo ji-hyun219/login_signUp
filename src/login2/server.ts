@@ -5,17 +5,12 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-// bodyParser 모듈 없이는 post, put 요청 메소드의 
-// request.body를 읽어올 수 없다
-
-
 // [CONFIGURE APP TO USE bodyParser]
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
 require('dotenv').config();
-// console.log(process.env.PORT)
 const PORT = process.env.PORT;
 
 

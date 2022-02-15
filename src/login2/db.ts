@@ -16,5 +16,5 @@ module.exports = () => {
   mongoose.connection.on('disconnected', connect);
   // 윗 부분은 연결이 해제될 시에 다시 connect 함수를 실행하는 부분
 
-  require('./models/index'); // 나중에 생성?
+  require('./models/index');
 };
