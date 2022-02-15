@@ -2,18 +2,17 @@
 // bcrypt 사용 -> 패스워드를 암호화
 // jwt 이용해서 토큰 생성
 
-const db = require('../models');
-const User = db.user;
 import { NextFunction } from "express";
-let next : NextFunction;
+import bcrypt from "bcrypt-nodejs";
+import { serviceReturnForm } from "../modules/service-modules";
 
 const jwt = require('jsonwebtoken');
-import bcrypt from "bcrypt-nodejs";
+const db = require('../models');
+const User = db.user;
+let next : NextFunction;
 
-const YOUR_SECRET_KEY = process.env.SECRET_KEY;
 require('dotenv').config();
-
-import { serviceReturnForm } from "../modules/service-modules";
+const YOUR_SECRET_KEY = process.env.SECRET_KEY;
 
 
 export interface UserType {
@@ -30,8 +29,6 @@ const signUpService = async (
     name: string,
     pw: string
 ) => {
-
-
     const returnForm: serviceReturnForm = {
         status: 500,
         message: "server error",
@@ -58,8 +55,6 @@ const signUpService = async (
 
 // * Create User only when Id not exists
 if (!isIdExist) {
-
-    const SECRET_KEY = process.env.SECRET_KEY;    
     // * Encrypt user password
     let encryptedPassword;  
     bcrypt.genSalt(10, (err:Error, salt:string)=> { 
@@ -71,7 +66,8 @@ if (!isIdExist) {
             next();
         });
     })
-    const token = jwt.sign({ id }, SECRET_KEY, {
+    // Create Token
+    const token = jwt.sign({ id }, YOUR_SECRET_KEY, {
         expiresIn: "20h",
     });
 
@@ -115,11 +111,11 @@ const loginService = async (id: string, password: string) => {
             async (data:UserType) => {
                 // * Validate if email already exists
                 if (data) {
-                    let isPasswordCorrect;
+                    let isPasswordCorrect;   // PW 검사
                      await bcrypt.compare(
                         password,
-                        data.user_pw,    // 점검/??
-                        (err, same)=>{
+                        data.user_pw,
+                        (err:Error, same:boolean)=>{
                             if(err) return next(err);
                             isPasswordCorrect = same;
                         },

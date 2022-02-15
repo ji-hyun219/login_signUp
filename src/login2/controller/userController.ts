@@ -1,14 +1,13 @@
 import { Response, Request, NextFunction } from "express";
+import {loginService, signUpService } from "../services/authorization";
+import { serviceReturnForm } from "../modules/service-modules";
 
 const db = require('../models');
 const User = db.user;
 const jwt = require('jsonwebtoken');
+
+
 require('dotenv').config();  
-
-import {loginService, signUpService } from "../services/authorization";
-import { serviceReturnForm } from "../modules/service-modules";
-import { builtinModules } from "module";
-
 const YOUR_SECRET_KEY = process.env.SECRET_KEY;
 
 
@@ -73,9 +72,7 @@ const login = async (req: Request, res: Response) => {
     }
 };
 
-export {
-    signUp, login
-};
+export { signUp, login };
 
 
 
