@@ -8,7 +8,7 @@ const { verifyToken } = require('./middlewares/verifyToken');
 
 router.post('/signUp', usersCtrl.signUp);
 router.post('/login', usersCtrl.login);
-router.get('/', verifyToken, 'todosController.getAll');
+// router.get('/', verifyToken, 'todosController.getAll');
 
 // verifyToken 라는 미들웨어를 거쳐서
 // token이 유효한지 확인한다.

@@ -3,7 +3,7 @@
 // jwt 이용해서 토큰 생성
 
 import { NextFunction } from "express";
-import bcrypt from "bcrypt-nodejs";
+import bcrypt from "bcrypt";
 import { serviceReturnForm } from "../modules/service-modules";
 
 const jwt = require('jsonwebtoken');
@@ -43,6 +43,7 @@ const signUpService = async (
                 isIdExist = true;
                 returnForm.status = 400;
                 returnForm.message = "Id already exist";
+                console.log(data);
             }
         })
         .catch((e:Error) => {
@@ -55,17 +56,8 @@ const signUpService = async (
 // * Create User only when Id not exists
 if (!isIdExist) {
     // * Encrypt user password
-    let encryptedPassword;
-    bcrypt.genSalt(10, (err:Error, salt:string)=> { 
-        if(err) return next(err);
-        
-        bcrypt.hash(pw, salt, null, (err:Error, hash:string)=>{
-            if(err) return next(err);
-            encryptedPassword = hash;
-            return next(null);
-        });
-
-    })
+    // * Encrypt user password
+    let encryptedPassword = await bcrypt.hash(pw, 10);
 
     // Create Token
     const token = jwt.sign({ id }, YOUR_SECRET_KEY, {
@@ -115,13 +107,10 @@ const loginService = async (id: string, password: string) => {   // id password 
                     const isPasswordCorrect =  // PW 검사
                     await bcrypt.compare(
                          password,       
-                         data.user_pw,    
-                        (err:Error, res:boolean)=>{
-                            if(err) return (err);
-                        }
+                         data.user_pw, 
                     );
                     // * Validate if password is correct
-                    if (isPasswordCorrect) {     // TYPE_ERROR
+                    if (isPasswordCorrect) {     
                         returnForm.status = 200;
                         returnForm.message = "Login Success";
                         returnForm.responseData = { token: data.token };
