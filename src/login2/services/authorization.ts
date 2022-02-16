@@ -51,21 +51,22 @@ const signUpService = async (
             returnForm.message = "Server Error";
             return;
         });
-     
 
 // * Create User only when Id not exists
 if (!isIdExist) {
     // * Encrypt user password
-    let encryptedPassword;  
+    let encryptedPassword;
     bcrypt.genSalt(10, (err:Error, salt:string)=> { 
         if(err) return next(err);
         
-        bcrypt.hash(pw, salt, (err:Error, hash:string)=>{
+        bcrypt.hash(pw, salt, null, (err:Error, hash:string)=>{
             if(err) return next(err);
             encryptedPassword = hash;
-            next();
+            return next(null);
         });
+
     })
+
     // Create Token
     const token = jwt.sign({ id }, YOUR_SECRET_KEY, {
         expiresIn: "20h",
@@ -109,16 +110,15 @@ const loginService = async (id: string, password: string) => {
     })
         .then(
             async (data:UserType) => {
-                // * Validate if email already exists
+                // * Validate if id already exists
                 if (data) {
-                    let isPasswordCorrect;   // PW 검사
-                     await bcrypt.compare(
-                        password,
-                        data.user_pw,
+                    const isPasswordCorrect =  // PW 검사
+                    await bcrypt.compare(
+                         password,
+                         data.user_pw,
                         (err:Error, same:boolean)=>{
-                            if(err) return next(err);
-                            isPasswordCorrect = same;
-                        },
+                            if(err) return (err);
+                        }
                     );
                     // * Validate if password is correct
                     if (isPasswordCorrect) {
