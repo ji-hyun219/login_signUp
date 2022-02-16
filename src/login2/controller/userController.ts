@@ -30,7 +30,7 @@ const signUp = async (req: Request, res: Response) => {
         res.status(status).send({
             status,
             message,
-            responseData,
+            responseData,   // 토큰
         });
     } else {
         // when failed

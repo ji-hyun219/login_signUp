@@ -95,7 +95,7 @@ return returnForm;
 
 
 
-const loginService = async (id: string, password: string) => {
+const loginService = async (id: string, password: string) => {   // id password 인자로 받음
     const returnForm: serviceReturnForm = {
         status: 500,
         message: "server error",
@@ -104,9 +104,9 @@ const loginService = async (id: string, password: string) => {
 
     await User.findOne({
         where: {
-            id: id,
+            user_id: id,    
         },
-        attributes: ["name", "pw", "token"],
+        attributes: ["user_name", "user_pw", "token"],   
     })
         .then(
             async (data:UserType) => {
@@ -114,9 +114,9 @@ const loginService = async (id: string, password: string) => {
                 if (data) {
                     const isPasswordCorrect =  // PW 검사
                     await bcrypt.compare(
-                         password,
-                         data.user_pw,
-                        (err:Error, same:boolean)=>{
+                         password,       
+                         data.user_pw,    
+                        (err:Error, res:boolean)=>{
                             if(err) return (err);
                         }
                     );

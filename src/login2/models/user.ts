@@ -6,7 +6,8 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     user_id: String,
     user_name: String,
-    user_pw: String
+    user_pw: String,
+    // token 추가해야 할 것 같다.
 });
 
 const User = mongoose.model('user', userSchema);
