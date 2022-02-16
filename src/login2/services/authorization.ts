@@ -121,7 +121,7 @@ const loginService = async (id: string, password: string) => {   // id password 
                         }
                     );
                     // * Validate if password is correct
-                    if (isPasswordCorrect) {
+                    if (isPasswordCorrect) {     // TYPE_ERROR
                         returnForm.status = 200;
                         returnForm.message = "Login Success";
                         returnForm.responseData = { token: data.token };

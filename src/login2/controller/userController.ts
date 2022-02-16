@@ -57,7 +57,8 @@ const login = async (req: Request, res: Response) => {
     if (returnData.status == 200) {
         // when successed
         const { status, message, responseData } = returnData;
-        res.status(status).send({
+        res.cookie('user', responseData);    // 토큰을 쿠키에 저장
+        res.status(status).send({        
             status,
             message,
             responseData,
